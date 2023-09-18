@@ -1,91 +1,80 @@
-
-var mySet = function() {
-    var collection = [];
-
-    this.has = function(element) {
-        return (collection.indexOf(element) !== -1);
-    }
-
-    this.values = function() {
-        return collection;
-    }
-
-    this.add = function(element) {
-        if (!this.has(element)) {
-            collection.push(element)
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    this.remove = function (element) {
-        if (this.has(element)) {
-            var i = collection.indexOf(element);
-            collection.splice(i,1);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    this.size = function() {
-        return collection.length;
-    }
-
-    this.union = function (otherSet) {
-        var unionSet = new mySet();
-        var firstSet = this.values();
-        var secondSet = otherSet.values();
-        firstSet.forEach(function(e) {
-            unionSet.add(e);
-        })
-        secondSet.forEach(function(e) {
-            unionSet.add(e);
-        })
-        return unionSet;
-    }
-
-    this.intersection = function(otherSet) {
-        var intersectionSet = new mySet();
-        var firstSet = this.values();
-        firstSet.forEach(function(e) {
-            if (otherSet.has(e)) {
-                intersectionSet.add(e);
-            }
-        })
-        return intersectionSet;
-    }
-
-    this.difference = function(otherSet) {
-        var differenceSet = new mySet();
-        var firstSet = this.values();
-        firstSet.forEach(function(e) {
-            if (!otherSet.has(e)) {
-                differenceSet.add(e)
-            }
-        })
-        return differenceSet;
-    }
-
-    this.subset = function(otherSet) {
-        var firstSet = this.values();
-        return firstSet.every(function(e) {
-            return otherSet.has(e);
-        })
-    }
+function MyCustomQueue() {
+  var collection = [];
+  this.print = function () {
+    console.log(collection);
+  };
+  this.enqueue = function (element) {
+    collection.push(element);
+  };
+  this.dequeue = function () {
+    return collection.shift();
+  };
+  this.front = function () {
+    return collection[0];
+  };
+  this.size = function () {
+    return collection.length;
+  };
+  this.isEmpty = function () {
+    return collection.length === 0;
+  };
 }
 
-const set1 = new mySet();
-set1.add('a');
-set1.add('b');
-set1.add('c');
-set1.add('d');
-console.log(set1.values(), ' are the values');
-const set2 = new mySet();
-set2.add('a');
-set2.add('b');
-console.log(set1.union(set2).values(), ' is the union');
-console.log(set1.intersection(set2).values(), ' is the intersection');
-console.log(set2.subset(set1), ' set2 is or not a subet of set1');
-console.log(set1.difference(set2).values(), ' is the diff');
+var myQueue = new MyCustomQueue();
+myQueue.enqueue("ludo");
+myQueue.enqueue("antoine");
+myQueue.enqueue("bastien");
+console.log(myQueue.front());
+myQueue.print();
+myQueue.dequeue();
+myQueue.print();
+myQueue.dequeue();
+myQueue.print();
+console.log(myQueue.front());
+
+function PriorityQueue() {
+  var collection = [];
+  this.print = function () {
+    console.log(collection);
+  };
+  this.enqueue = function (element) {
+    if (this.isEmpty()) {
+      collection.push(element);
+    } else {
+      var added = false;
+      for (i = 0; i < collection.length; i++) {
+        if (element[1] < collection[i][1]) {
+          collection.splice(i, 0, element);
+          added = true;
+          break;
+        }
+      }
+      if (!added) {
+        collection.push(element);
+      }
+    }
+  };
+  this.dequeue = function () {
+    return collection.shift();
+  };
+  this.front = function () {
+    return collection[0];
+  };
+  this.size = function () {
+    return collection.length;
+  };
+  this.isEmpty = function () {
+    return collection.length === 0;
+  };
+}
+
+const queue = new PriorityQueue();
+queue.enqueue(["ludo", 2]);
+queue.enqueue(["paul", 10]);
+queue.enqueue(["eric", 7]);
+queue.enqueue(["linda", 5]);
+queue.enqueue(["cynthia", 2]);
+queue.enqueue(["vincent", 20]);
+queue.enqueue(["corinne", 1]);
+queue.dequeue();
+queue.print();
