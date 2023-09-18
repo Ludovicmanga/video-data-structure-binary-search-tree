@@ -1,71 +1,91 @@
-// Partie 2, implémentation avec un array
 
-var letters = [];
+var mySet = function() {
+    var collection = [];
 
-var word = "kayake";
-
-var reverseWord = "";
-
-// on met les lettres du mot dans la stack
-for (var i = 0; i < word.length; i++) {
-    letters.push(word[i]);
-    console.log(letters);
-}
-
-console.log('----');
-console.log('----');
-
-// on les pop de la stack dans l'ordre inversé
-for (var i = 0; i < word.length; i++) {
-    reverseWord += letters.pop();
-    console.log(letters, ' is the stack, and reverse word is ', reverseWord);
-}
-
-console.log('----');
-
-console.log(word, ' est le mot');
-console.log(reverseWord, ' est le mot inversé');
-
-
-if (reverseWord === word) {
-    console.log('le mot est un palindrome');
-} else {
-    console.log('le mot n\'est pas un palindrome');
-}
-
-
-// Partie 2, implémentation de notre class Stack
-
-var MyStack = function() {
-    this.count = 0;
-    this.storage = {};
-
-    // push
-    this.push = function (value) {
-        this.storage[this.count] = value;
-        this.count++;
+    this.has = function(element) {
+        return (collection.indexOf(element) !== -1);
     }
 
-    // pop
-    this.pop = function() {
-        if (this.count === 0) {
-            return undefined;
+    this.values = function() {
+        return collection;
+    }
+
+    this.add = function(element) {
+        if (!this.has(element)) {
+            collection.push(element)
+            return true;
+        } else {
+            return false;
         }
-
-        this.count--;
-        var result = this.storage[this.count];
-        delete this.storage[this.count];
-        return result;
     }
 
-    // size
+    this.remove = function (element) {
+        if (this.has(element)) {
+            var i = collection.indexOf(element);
+            collection.splice(i,1);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     this.size = function() {
-        return this.count;
+        return collection.length;
     }
 
-    // peek
-    this.peek = function() {
-        return this.storage[this.count-1];
+    this.union = function (otherSet) {
+        var unionSet = new mySet();
+        var firstSet = this.values();
+        var secondSet = otherSet.values();
+        firstSet.forEach(function(e) {
+            unionSet.add(e);
+        })
+        secondSet.forEach(function(e) {
+            unionSet.add(e);
+        })
+        return unionSet;
+    }
+
+    this.intersection = function(otherSet) {
+        var intersectionSet = new mySet();
+        var firstSet = this.values();
+        firstSet.forEach(function(e) {
+            if (otherSet.has(e)) {
+                intersectionSet.add(e);
+            }
+        })
+        return intersectionSet;
+    }
+
+    this.difference = function(otherSet) {
+        var differenceSet = new mySet();
+        var firstSet = this.values();
+        firstSet.forEach(function(e) {
+            if (!otherSet.has(e)) {
+                differenceSet.add(e)
+            }
+        })
+        return differenceSet;
+    }
+
+    this.subset = function(otherSet) {
+        var firstSet = this.values();
+        return firstSet.every(function(e) {
+            return otherSet.has(e);
+        })
     }
 }
+
+const set1 = new mySet();
+set1.add('a');
+set1.add('b');
+set1.add('c');
+set1.add('d');
+console.log(set1.values(), ' are the values');
+const set2 = new mySet();
+set2.add('a');
+set2.add('b');
+console.log(set1.union(set2).values(), ' is the union');
+console.log(set1.intersection(set2).values(), ' is the intersection');
+console.log(set2.subset(set1), ' set2 is or not a subet of set1');
+console.log(set1.difference(set2).values(), ' is the diff');
